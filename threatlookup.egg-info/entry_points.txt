@@ -1,0 +1,5 @@
+[console_scripts]
+threatlookup = threatlookup.cli:cli
+threatlookup-config = threatlookup.config_cli:config
+threatlookup-test = threatlookup.test_cli:test
+

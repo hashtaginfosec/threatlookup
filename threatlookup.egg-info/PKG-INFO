@@ -1,0 +1,168 @@
+Metadata-Version: 2.1
+Name: threatlookup
+Version: 0.1.0
+Summary: A Python-based threat lookup tool using ML regression for threat ranking
+Home-page: https://github.com/threatlookup/threatlookup
+Author: ThreatLookup Team
+Author-email: team@threatlookup.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Information Technology
+Classifier: Topic :: Security
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# ThreatLookup
+
+A Python-based threat lookup tool that utilizes machine learning regression to learn and threat rank domains, IPs, files, file hashes, and email addresses. This tool provides guidance on threat levels and remediation steps for given keywords.
+
+## Features
+
+- **Domain Analysis**: WHOIS-based threat assessment for domains
+- **Risk Scoring**: Multi-factor risk scoring algorithm
+- **Threat Levels**: Categorized threat levels (Low, Medium, High, Critical)
+- **Remediation Guidance**: Specific remediation steps based on threat assessment
+- **CLI Interface**: Easy-to-use command-line interface
+- **Rich Output**: Beautiful console output with color-coded results
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/threatlookup/threatlookup.git
+cd threatlookup
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Install the package:
+```bash
+pip install -e .
+```
+
+## Usage
+
+### Domain Analysis
+
+Analyze a domain for threat indicators:
+
+```bash
+threatlookup domain example.com
+```
+
+#### Output Formats
+
+- **Detailed (default)**: Rich console output with full analysis
+- **Table**: Compact table format
+- **JSON**: Machine-readable JSON output
+
+```bash
+# Detailed output
+threatlookup domain example.com
+
+# Table output
+threatlookup domain example.com --output table
+
+# JSON output
+threatlookup domain example.com --output json
+
+# Verbose output
+threatlookup domain example.com --verbose
+```
+
+## Threat Assessment Criteria
+
+### Domain Analysis Factors
+
+1. **Registration Age** (50% weight)
+   - < 7 days: Very highly suspicious (10.0/10)
+   - < 14 days: Highly suspicious (8.5/10)
+   - < 30 days: Suspicious (7.0/10)
+   - < 90 days: Somewhat suspicious (4.0/10)
+   - < 365 days: Low risk (2.0/10)
+   - > 365 days: Very low risk (1.0/10)
+
+2. **Country Risk** (30% weight)
+   - Suspicious countries (CN, RU, IR, KP, BY): High risk (8.0/10)
+   - Other countries: Low risk (1.0/10)
+
+3. **Domain Randomness** (20% weight)
+   - Randomized patterns: High risk (7.0/10)
+   - Normal domains: Low risk (1.0/10)
+
+### Threat Levels
+
+- **Critical** (8.0+): Immediate action required
+- **High** (6.0-7.9): High-priority monitoring
+- **Medium** (4.0-5.9): Watch list monitoring
+- **Low** (< 4.0): Normal monitoring
+
+## Examples
+
+### Suspicious Domain
+```bash
+$ threatlookup domain xyz123abc789.com
+```
+
+### Recently Registered Domain
+```bash
+$ threatlookup domain newdomain2024.com
+```
+
+### Domain from Suspicious Country
+```bash
+$ threatlookup domain example.ru
+```
+
+## Development
+
+### Project Structure
+
+```
+threatlookup/
+├── threatlookup/
+│   ├── __init__.py
+│   ├── models.py          # Pydantic data models
+│   ├── domain_analyzer.py # Domain analysis logic
+│   └── cli.py            # Command-line interface
+├── requirements.txt
+├── setup.py
+└── README.md
+```
+
+### Adding New Analyzers
+
+The tool is designed to be extensible. To add new analyzers (IP, file hash, email):
+
+1. Create a new analyzer class following the same pattern as `DomainAnalyzer`
+2. Add new CLI commands in `cli.py`
+3. Extend the models in `models.py` as needed
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Security Notice
+
+This tool is for educational and research purposes. Always follow responsible disclosure practices and respect the terms of service of any external APIs or services used.
+
+

@@ -1,0 +1,7 @@
+python-whois==0.8.0
+requests==2.31.0
+pydantic==2.5.0
+click==8.1.7
+rich==13.7.0
+aiohttp==3.9.1
+vt-py==0.21.0
