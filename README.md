@@ -1,17 +1,17 @@
 # ThreatLookup
 
-A Python-based threat lookup tool that utilizes machine learning regression to learn and threat rank domains, IPs, files, file hashes, and email addresses. This tool provides guidance on threat levels and remediation steps for given keywords.
+A comprehensive Python-based threat intelligence tool that analyzes domains using multiple threat intelligence sources and AI-powered analysis. ThreatLookup provides detailed threat assessments with actionable recommendations for security teams.
 
-## Features
+## 🚀 Features
 
-- **Domain Analysis**: WHOIS-based threat assessment for domains
-- **Risk Scoring**: Multi-factor risk scoring algorithm
-- **Threat Levels**: Categorized threat levels (Low, Medium, High, Critical)
-- **Remediation Guidance**: Specific remediation steps based on threat assessment
-- **CLI Interface**: Easy-to-use command-line interface
-- **Rich Output**: Beautiful console output with color-coded results
+- **Multi-Source Threat Intelligence**: Integrates OpenThreatExchange (OTX) and VirusTotal APIs
+- **AI-Powered Analysis**: Claude AI provides sophisticated threat analysis and recommendations
+- **Domain Analysis**: Comprehensive WHOIS-based threat assessment
+- **Rich Output**: Beautiful console output with detailed threat intelligence
+- **Multiple Output Formats**: Console, table, and JSON output options
+- **Configurable**: Easy setup for API keys and service configuration
 
-## Installation
+## 🔧 Installation
 
 1. Clone the repository:
 ```bash
@@ -19,126 +19,248 @@ git clone https://github.com/threatlookup/threatlookup.git
 cd threatlookup
 ```
 
-2. Install dependencies:
+2. Create a virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Install the package:
+4. Install the package:
 ```bash
 pip install -e .
 ```
 
-## Usage
+## ⚙️ Configuration
 
-### Domain Analysis
+### Initial Setup
 
-Analyze a domain for threat indicators:
+Run the interactive configuration setup:
 
 ```bash
-threatlookup domain example.com
+threatlookup-config
 ```
 
-#### Output Formats
+This will guide you through setting up:
+- **OpenThreatExchange (OTX) API**: Get your key at https://otx.alienvault.com/
+- **VirusTotal API**: Get your key at https://www.virustotal.com/gui/my-apikey
+- **Claude AI API**: Get your key at https://console.anthropic.com/
 
-- **Detailed (default)**: Rich console output with full analysis
-- **Table**: Compact table format
-- **JSON**: Machine-readable JSON output
+### Environment Variables
+
+You can also configure using environment variables:
 
 ```bash
-# Detailed output
-threatlookup domain example.com
+# OTX Configuration
+export THREATLOOKUP_OTX_API_KEY="your_otx_api_key"
+export THREATLOOKUP_OTX_ENABLED="true"
 
-# Table output
-threatlookup domain example.com --output table
+# VirusTotal Configuration
+export THREATLOOKUP_VIRUSTOTAL_API_KEY="your_virustotal_api_key"
+export THREATLOOKUP_VIRUSTOTAL_ENABLED="true"
 
-# JSON output
-threatlookup domain example.com --output json
+# Claude AI Configuration
+export THREATLOOKUP_CLAUDE_API_KEY="your_claude_api_key"
+export THREATLOOKUP_CLAUDE_ENABLED="true"
+```
+
+### Configuration File
+
+Configuration is stored in `~/.threatlookup/config.json`:
+
+```json
+{
+  "otx": {
+    "api_key": "your_otx_api_key",
+    "enabled": true
+  },
+  "virustotal": {
+    "api_key": "your_virustotal_api_key", 
+    "enabled": true
+  },
+  "claude": {
+    "api_key": "your_claude_api_key",
+    "enabled": true
+  }
+}
+```
+
+## 📖 Usage
+
+### Basic Domain Analysis
+
+Analyze any domain for threat indicators:
+
+```bash
+threatlookup google.com
+threatlookup suspicious-domain.com
+threatlookup 29kgfx.ink
+```
+
+### Output Formats
+
+```bash
+# Detailed output (default)
+threatlookup example.com
+
+# Table format
+threatlookup example.com --output table
+
+# JSON format
+threatlookup example.com --output json
 
 # Verbose output
-threatlookup domain example.com --verbose
+threatlookup example.com --verbose
 ```
 
-## Threat Assessment Criteria
+### Testing Configuration
 
-### Domain Analysis Factors
+Test your API connections:
 
-1. **Registration Age** (50% weight)
-   - < 7 days: Very highly suspicious (10.0/10)
-   - < 14 days: Highly suspicious (8.5/10)
-   - < 30 days: Suspicious (7.0/10)
-   - < 90 days: Somewhat suspicious (4.0/10)
-   - < 365 days: Low risk (2.0/10)
-   - > 365 days: Very low risk (1.0/10)
-
-2. **Country Risk** (30% weight)
-   - Suspicious countries (CN, RU, IR, KP, BY): High risk (8.0/10)
-   - Other countries: Low risk (1.0/10)
-
-3. **Domain Randomness** (20% weight)
-   - Randomized patterns: High risk (7.0/10)
-   - Normal domains: Low risk (1.0/10)
-
-### Threat Levels
-
-- **Critical** (8.0+): Immediate action required
-- **High** (6.0-7.9): High-priority monitoring
-- **Medium** (4.0-5.9): Watch list monitoring
-- **Low** (< 4.0): Normal monitoring
-
-## Examples
-
-### Suspicious Domain
 ```bash
-$ threatlookup domain xyz123abc789.com
+threatlookup-test
 ```
 
-### Recently Registered Domain
+## 🔍 Threat Intelligence Sources
+
+### OpenThreatExchange (OTX)
+- **Community-driven threat intelligence**
+- **Pulse data**: Threat campaigns and indicators
+- **Malware families**: Associated malware families
+- **Attack types**: Specific attack classifications
+
+### VirusTotal
+- **Multi-engine scanning**: 95+ security engines
+- **Reputation scoring**: Domain reputation analysis
+- **Categories**: Domain classification and categorization
+- **Detection rates**: Malicious detection percentages
+
+### Claude AI Analysis
+- **Executive summaries**: Concise threat level overviews
+- **Threat classification**: Primary threat types and confidence
+- **Risk assessment**: Overall risk levels with key factors
+- **Technical analysis**: Registration patterns and intelligence correlation
+- **Actionable recommendations**: Specific remediation steps
+
+## 📊 Example Output
+
+### Clean Domain Analysis
+
 ```bash
-$ threatlookup domain newdomain2024.com
+$ threatlookup google.com
+
+Threat Analysis for domain: google.com
+============================================================
+              Domain Information               
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃ Property                ┃ Value             ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ Domain                  │ google.com        │
+│ Registration Date       │ 1997-09-15        │
+│ Days Since Registration │ 10247             │
+│ Country                 │ US                │
+│ Registrar               │ MarkMonitor, Inc. │
+└─────────────────────────┴───────────────────┘
+
+OTX Threat Intelligence:
+┏━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ Property     ┃ Value  ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ Malicious    │ No     │
+│ Threat Score │ 0.0/10 │
+│ Pulse Count  │ 0      │
+│ Confidence   │ 80.0%  │
+└──────────────┴────────┘
+
+VirusTotal Intelligence:
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Property          ┃ Value                                                    ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Malicious         │ No                                                       │
+│ Detection Engines │ 95                                                       │
+│ Malicious Engines │ 0                                                        │
+│ Reputation        │ 646                                                      │
+│ Reputation Status │ Positive                                                 │
+└───────────────────┴──────────────────────────────────────────────────────────┘
+
+Claude AI Analysis:
+# Threat Intelligence Analysis: google.com
+
+## 1. Summary
+This domain represents Google's legitimate primary domain with extremely low 
+risk indicators across all assessment categories...
+
+## 2. Threat Type and Confidence Level
+- **Threat Type:** None detected - Legitimate domain
+- **Confidence Level:** Very High (90%)
+- **Classification:** Benign/Trusted
+
+## 3. Risk Level: **LOW**
+
+## 4. Recommended Next Steps
+1. **Whitelist Domain:** Add to organizational allow-lists...
+2. **Monitor for Typosquatting:** Actively monitor for similar domains...
 ```
 
-### Domain from Suspicious Country
+### Malicious Domain Analysis
+
 ```bash
-$ threatlookup domain example.ru
+$ threatlookup 29kgfx.ink
+
+Threat Analysis for domain: 29kgfx.ink
+============================================================
+                        Domain Information                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Property                ┃ Value                                 ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Domain                  │ 29kgfx.ink                            │
+│ Registration Date       │ 2025-05-21                            │
+│ Days Since Registration │ 137                                   │
+│ Country                 │ HK                                    │
+│ Registrar               │ Domain International Services Limited │
+└─────────────────────────┴───────────────────────────────────────┘
+
+OTX Threat Intelligence:
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Property     ┃ Value                         ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Malicious    │ Yes                           │
+│ Threat Score │ 2.4/10                        │
+│ Pulse Count  │ 1                             │
+│ Attack Types │ phishing &  scam domain names │
+└──────────────┴───────────────────────────────┘
+
+VirusTotal Intelligence:
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Property          ┃ Value                   ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Malicious         │ Yes                     │
+│ Detection Engines │ 95                      │
+│ Malicious Engines │ 2                       │
+│ Categories        │ Spam (alphaMountain.ai) │
+└───────────────────┴─────────────────────────┘
+
+Claude AI Analysis:
+# Threat Intelligence Analysis: 29kgfx.ink
+
+## 1. Summary
+The domain 29kgfx.ink is a newly registered (137 days old) Hong Kong-based 
+domain flagged by both OTX and VirusTotal as malicious...
+
+## 2. Threat Type and Confidence Level
+- **Threat Type:** Phishing & Scam Domain, Spam Distribution
+- **Confidence Level:** Medium-High (70%)
+
+## 3. Risk Level: **MEDIUM**
+
+## 4. Recommended Next Steps
+1. **Immediate Blocking:** Add domain to organizational blocklists...
+2. **Email Security Review:** Search mail logs for any emails...
+3. **Threat Hunting:** Conduct retroactive search across security logs...
 ```
 
-## Development
-
-### Project Structure
-
-```
-threatlookup/
-├── threatlookup/
-│   ├── __init__.py
-│   ├── models.py          # Pydantic data models
-│   ├── domain_analyzer.py # Domain analysis logic
-│   └── cli.py            # Command-line interface
-├── requirements.txt
-├── setup.py
-└── README.md
-```
-
-### Adding New Analyzers
-
-The tool is designed to be extensible. To add new analyzers (IP, file hash, email):
-
-1. Create a new analyzer class following the same pattern as `DomainAnalyzer`
-2. Add new CLI commands in `cli.py`
-3. Extend the models in `models.py` as needed
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Security Notice
-
-This tool is for educational and research purposes. Always follow responsible disclosure practices and respect the terms of service of any external APIs or services used.
+## 🏗️ Project Structure
